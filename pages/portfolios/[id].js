@@ -1,36 +1,18 @@
-import Axios from "axios";
+import React from "react";
+import { useQuery } from "@apollo/react-hooks";
+import { GET_PORTFOLIO } from "@/apollo/queries";
+import withApollo from "@/hoc/withApollo";
+import { getDataFromTree } from "@apollo/react-ssr";
 
-const fetchPortfolioById = id => {
-    const query = `
-    query Portfolio($id: ID) {
-        portfolio (id: $id) {
-            _id,
-            title,
-            company,
-            companyWebsite,
-            location,
-            jobTitle,
-            description,
-            startDate,
-            endDate,
-        }
-    }`;
-    const variables = { id };
-    return Axios.post("http://localhost:3000/graphql", { query, variables })
-        .then(({ data: graph }) => graph.data)
-        .then(data => data.portfolio);
-};
-
-const PortfolioDetail = ({ portfolio }) => {
-    // const router = useRouter();
-    // const id = router.query.id;
-    // const { id } = query;
+const PortfolioDetail = ({ query }) => {
+    const { data } = useQuery(GET_PORTFOLIO, { variables: { id: query.id } });
+    const portfolio = (data && data.portfolio) || {};
 
     return (
         <div className="portfolio-detail">
             <div className="container">
                 <div className="jumbotron">
-                    <h1 className="display-3">{portfolio.title}</h1>
+                    <h3 className="display-5">{portfolio.title}</h3>
                     <p className="lead">{portfolio.jobTitle}</p>
                     <p>
                         <a
@@ -74,8 +56,7 @@ const PortfolioDetail = ({ portfolio }) => {
 //getInitialProps를 통해 서버사이드에서 쿼리를 뿌려주게 됨.
 
 PortfolioDetail.getInitialProps = async ({ query }) => {
-    const portfolio = await fetchPortfolioById(query.id);
-    return { portfolio };
+    return { query };
 };
 
-export default PortfolioDetail;
+export default withApollo(PortfolioDetail, { getDataFromTree });
