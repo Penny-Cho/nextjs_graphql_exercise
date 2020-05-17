@@ -11,17 +11,29 @@ class User {
         return this.Model.create(signUpData);
     }
 
-    signIn(signInData, ctx) {
-        const isAuthenticated = ctx.authenticate(signInData);
-
-        if (isAuthenticated) {
-            console.log("User is authenticated!");
+    async signIn(signInData, ctx) {
+        try {
+            const user = await ctx.authenticate(signInData);
+            console.log(user);
+            return user;
+        } catch (error) {
+            return error;
         }
-        return `Sign In Output!`;
     }
 
-    signOut() {
-        return "Signing Out..";
+    signOut(ctx) {
+        try {
+            // console.log("BEFORE LOGOUT------");
+            // console.log("is authenticated", ctx.isAuthenticated());
+            // console.log("user", ctx.getUser());
+            ctx.logout();
+            // console.log("AFTER LOGOUT------");
+            // console.log("is authenticated", ctx.isAuthenticated());
+            // console.log("user", ctx.getUser());
+            return true;
+        } catch (e) {
+            return false;
+        }
     }
 }
 
