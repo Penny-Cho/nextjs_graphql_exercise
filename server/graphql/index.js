@@ -4,7 +4,8 @@ const { ApolloServer, gql } = require("apollo-server-express");
 const {
     portfolioQueries,
     portfolioMutations,
-    userMutations
+    userMutations,
+    userQueries
 } = require("./resolvers");
 
 const { portfolioTypes, userTypes } = require("./types");
@@ -21,6 +22,9 @@ exports.createApolloServer = () => {
         type Query {
             portfolio(id: ID): Portfolio
             portfolios: [Portfolio]
+            userPortfolios: [Portfolio]
+
+            user: User
         }
 
         type Mutation {
@@ -37,7 +41,8 @@ exports.createApolloServer = () => {
     // The root provides a resolver for each API endpoint
     const resolvers = {
         Query: {
-            ...portfolioQueries
+            ...portfolioQueries,
+            ...userQueries
         },
         Mutation: {
             ...portfolioMutations,
@@ -51,7 +56,8 @@ exports.createApolloServer = () => {
         context: ({ req }) => ({
             ...buildAuthContext(req),
             models: {
-                Portfolio: new Portfolio(mongoose.model("Portfolio")),
+                //req.user를 붙여줌으로써, user가 존재하지 않는 상황에서는 포트폴리오를 만들 수 없게 조치
+                Portfolio: new Portfolio(mongoose.model("Portfolio"), req.user),
                 User: new User(mongoose.model("User"))
             }
         })

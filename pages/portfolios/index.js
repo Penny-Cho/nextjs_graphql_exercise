@@ -1,24 +1,17 @@
 import PortfolioCard from "../../components/portfolios/PortfolioCard";
 import Link from "next/link";
-import {
-    useGetPortfolios,
-    useCreatePortfolio,
-    useDeletePortfolio,
-    useUpdatePortfolio
-} from "../../apollo/actions";
+import { useGetPortfolios } from "../../apollo/actions";
 import withApollo from "@/hoc/withApollo";
 import { getDataFromTree } from "@apollo/react-ssr";
+import BaseLayout from "../../layouts/BaseLayout";
 
 const Portfolios = () => {
     const { data } = useGetPortfolios();
-    const [updatePortfolio] = useUpdatePortfolio();
-    const [deletePortfolio] = useDeletePortfolio();
-    const [createPortfolio] = useCreatePortfolio();
 
     const portfolios = (data && data.portfolios) || [];
 
     return (
-        <>
+        <BaseLayout>
             <section className="section-title">
                 <div className="px-2">
                     <div className="pt-5 pb-4">
@@ -26,11 +19,7 @@ const Portfolios = () => {
                     </div>
                 </div>
             </section>
-            <section className="pb-5">
-                <button onClick={createPortfolio} className="btn btn-secondary">
-                    Add New
-                </button>
-            </section>
+            <section className="pb-5"></section>
             <section className="pb-5">
                 <div className="row">
                     {portfolios.map(portfolio => (
@@ -43,31 +32,11 @@ const Portfolios = () => {
                                     <PortfolioCard portfolio={portfolio} />
                                 </a>
                             </Link>
-                            <button
-                                className="btn btn-warning mt-2 p-1"
-                                onClick={() =>
-                                    updatePortfolio({
-                                        variables: { id: portfolio._id }
-                                    })
-                                }
-                            >
-                                update
-                            </button>
-                            <button
-                                className="btn btn-danger mt-2 ml-2 p-1"
-                                onClick={() =>
-                                    deletePortfolio({
-                                        variables: { id: portfolio._id }
-                                    })
-                                }
-                            >
-                                delete
-                            </button>
                         </div>
                     ))}
                 </div>
             </section>
-        </>
+        </BaseLayout>
     );
 };
 

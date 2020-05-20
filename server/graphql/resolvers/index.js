@@ -4,6 +4,9 @@ exports.portfolioQueries = {
     },
     portfolios: (root, args, ctx) => {
         return ctx.models.Portfolio.getAll();
+    },
+    userPortfolios: (root, args, ctx) => {
+        return ctx.models.Portfolio.getAllByUser();
     }
 };
 
@@ -22,6 +25,12 @@ exports.portfolioMutations = {
     deletePortfolio: async (root, { id }, ctx) => {
         const deletedPortfolio = await ctx.models.Portfolio.findAndDelete(id);
         return deletedPortfolio._id;
+    }
+};
+
+exports.userQueries = {
+    user: (root, args, ctx) => {
+        return ctx.models.User.getAuthUser(ctx);
     }
 };
 

@@ -2,13 +2,32 @@ class User {
     constructor(model) {
         this.Model = model;
     }
-    signUp(signUpData) {
+
+    getAuthUser(ctx) {
+        if (ctx.isAuthenticated()) {
+            return ctx.getUser();
+        }
+
+        return null;
+    }
+
+    async signUp(signUpData) {
         if (signUpData.password !== signUpData.passwordConfirmation) {
             throw new Error(
-                "Password must be the same as confirmation password"
+                "비밀번호와 비밀번호 확인 시 입력한 내용은 반드시 같아야 합니다."
             );
         }
-        return this.Model.create(signUpData);
+        try {
+            return await this.Model.create(signUpData);
+        } catch (e) {
+            if (e.code && e.code === 11000) {
+                throw new Error(
+                    "이메일이 이미 존재합니다. 다른 이메일을 입력하시거나 로그인을 해주세요."
+                );
+            }
+
+            throw e;
+        }
     }
 
     async signIn(signInData, ctx) {

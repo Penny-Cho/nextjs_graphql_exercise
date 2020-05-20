@@ -1,37 +1,10 @@
 import "bootstrap/dist/css/bootstrap.min.css";
+import "react-datepicker/dist/react-datepicker.css";
 import "../styles/index.scss";
-import Navbar from "@/components/shared/Navbar";
-import Hero from "@/components/shared/Hero";
-import Footer from "../components/shared/Footer";
 
 const MyApp = ({ Component, pageProps }) => {
-    const isHomepage = Component.name === "Home";
-
-    return (
-        <div className="portfolio-app">
-            <Navbar />
-            {/* {pageProps.appData} */}
-            {isHomepage && <Hero />}
-            <div className="container">
-                <Component {...pageProps} />
-            </div>
-            {isHomepage && <Footer />}
-        </div>
-    );
+    return <Component {...pageProps} />;
 };
-
-// MyApp.getInitialProps = async context => {
-//     console.log("GET INITIAL PROPS _APP");
-//     const initialProps =
-//         App.getInitialProps && (await App.getInitialProps(context));
-
-//     return {
-//         pageProps: {
-//             appData: "Hello _App Component",
-//             ...initialProps.pageProps
-//         }
-//     };
-// };
 
 export default MyApp;
 
