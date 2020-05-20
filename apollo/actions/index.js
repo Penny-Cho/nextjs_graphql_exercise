@@ -8,7 +8,9 @@ import {
     GET_USER,
     SIGN_OUT,
     GET_USER_PORTFOLIOS,
-    GET_PORTFOLIO
+    GET_PORTFOLIO,
+    FORUM_CATEGORIES,
+    TOPICS_BY_CATEGORY
 } from "../queries";
 
 export const useGetPortfolios = () => useQuery(GET_PORTFOLIOS);
@@ -60,3 +62,13 @@ export const useLazyGetUser = () => useLazyQuery(GET_USER);
 // useGetUser는 withAuth 때문에 만든거
 export const useGetUser = () => useQuery(GET_USER);
 // Auth Actions End ------
+
+//Forum Actions Start ----------
+
+export const useGetForumCategories = () => useQuery(FORUM_CATEGORIES);
+export const useGetTopicsByCategory = options =>
+    useQuery(TOPICS_BY_CATEGORY, options);
+
+//Forum Actions End ----------
+
+//query문 중 options가 들어가는 건 search 기준점 (예: id 같은거)를 넣기 위해서임.

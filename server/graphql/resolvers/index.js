@@ -46,3 +46,29 @@ exports.userMutations = {
         return ctx.models.User.signOut(ctx);
     }
 };
+
+exports.forumQueries = {
+    forumCategories: (root, args, ctx) => {
+        return ctx.models.ForumCategory.getAll();
+    },
+    topicsByCategory: async (root, { category }, ctx) => {
+        const forumCategory = await ctx.models.ForumCategory.getBySlug(
+            category
+        );
+        if (!forumCategory) {
+            return null;
+        }
+        return ctx.models.Topic.getAllByCategory(forumCategory._id);
+    }
+};
+
+// 개별 항목 내 args에 들어가는 내용은 graphql 내에서 기준점으로 삼는 것이 무엇인지를 넣게 됨. 예를 들어 user에 따른 결과를 출력하려면 user가 안에 들어가고, input값에 따르면 input을 넣음.
+
+// topicsByCategory같은 경우, category를 args 자리에 destructuring하여 넣게 되면 찾는 기준점이 category의 id가 됨. 이 기준을 slug로 하고 싶어서 우선 적으로 slug를 기반으로 찾는 코드를 적기 위해, getBySlug을 models에서 생성해 줌. graphql에서 catgory: "" 안에는 slug를 넣으면 찾아짐
+
+exports.forumMutations = {
+    createTopic: async (root, { input }, ctx) => {
+        const topic = await ctx.models.Topic.create(input);
+        return topic;
+    }
+};

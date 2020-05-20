@@ -4,6 +4,7 @@ export const GET_PORTFOLIO = gql`
     query Portfolio($id: ID) {
         portfolio(id: $id) {
             _id
+            daysOfExperience @client
             title
             company
             companyWebsite
@@ -15,6 +16,8 @@ export const GET_PORTFOLIO = gql`
         }
     }
 `;
+
+//서버에서 안가져오고 클라이언트에서 처리하는 field에는 @client를 붙여주면 됨 이러면 400 bad request가 뜨는데, 이걸 apollo client에서 핸들링을 좀 해줘야 함. hoc withApollo에서 resolvers로 처리
 
 export const GET_PORTFOLIOS = gql`
     query Portfolios {
@@ -83,18 +86,28 @@ export const CREATE_PORTFOLIO = gql`
 // 몽고에 보낼 기본 date 포맷은 iso 8601에 맞춰서 할 것
 
 export const UPDATE_PORTFOLIO = gql`
-    mutation UpdatePortfolio($id: ID) {
+    mutation UpdatePortfolio(
+        $id: ID
+        $title: String
+        $company: String
+        $companyWebsite: String
+        $location: String
+        $jobTitle: String
+        $description: String
+        $startDate: String
+        $endDate: String
+    ) {
         updatePortfolio(
             id: $id
             input: {
-                title: "updated job"
-                company: "update company"
-                companyWebsite: "naver.com"
-                location: "update Jersey"
-                jobTitle: "update job title"
-                description: "update description"
-                startDate: "2012-03-12T23:59Z"
-                endDate: "2019-11-14T23:59Z"
+                title: $title
+                company: $company
+                companyWebsite: $companyWebsite
+                location: $location
+                jobTitle: $jobTitle
+                description: $description
+                startDate: $startDate
+                endDate: $endDate
             }
         ) {
             _id
@@ -166,3 +179,37 @@ export const GET_USER = gql`
 `;
 
 //AUTH QUERIES END ==================================
+
+//FORUM QUERIES START ==================================
+
+export const FORUM_CATEGORIES = gql`
+    query ForumCategories {
+        forumCategories {
+            slug
+            title
+            subTitle
+        }
+    }
+`;
+
+export const TOPICS_BY_CATEGORY = gql`
+    query TopicsByCategory($category: String) {
+        topicsByCategory(category: $category) {
+            _id
+            slug
+            title
+            content
+            user {
+                username
+                avatar
+            }
+            forumCategory {
+                _id
+                title
+                slug
+            }
+        }
+    }
+`;
+
+//FORUM QUERIES END ==================================

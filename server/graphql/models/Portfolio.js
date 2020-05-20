@@ -29,7 +29,10 @@ class Portfolio {
     }
 
     findAndUpdate(id, data) {
-        return this.Model.findOneAndUpdate({ _id: id }, data, { new: true });
+        return this.Model.findOneAndUpdate({ _id: id }, data, {
+            new: true,
+            runValidators: true
+        });
     }
 
     findAndDelete(id) {
