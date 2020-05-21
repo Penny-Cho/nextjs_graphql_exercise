@@ -10,7 +10,11 @@ import {
     GET_USER_PORTFOLIOS,
     GET_PORTFOLIO,
     FORUM_CATEGORIES,
-    TOPICS_BY_CATEGORY
+    TOPICS_BY_CATEGORY,
+    CREATE_TOPIC,
+    TOPIC_BY_SLUG,
+    POSTS_BY_TOPIC,
+    CREATE_POST
 } from "../queries";
 
 export const useGetPortfolios = () => useQuery(GET_PORTFOLIOS);
@@ -68,6 +72,33 @@ export const useGetUser = () => useQuery(GET_USER);
 export const useGetForumCategories = () => useQuery(FORUM_CATEGORIES);
 export const useGetTopicsByCategory = options =>
     useQuery(TOPICS_BY_CATEGORY, options);
+
+export const useGetTopicBySlug = options => useQuery(TOPIC_BY_SLUG, options);
+
+export const useCreateTopic = () =>
+    useMutation(CREATE_TOPIC, {
+        // 캐시를 이용하여 새로 생성된 토픽이 화면에 자동으로 뿌려지게 하는 로직
+        update(cache, { data: { createTopic } }) {
+            try {
+                const { topicsByCategory } = cache.readQuery({
+                    query: TOPICS_BY_CATEGORY,
+                    variables: { category: createTopic.forumCategory.slug }
+                });
+                cache.writeQuery({
+                    query: TOPICS_BY_CATEGORY,
+                    data: {
+                        topicsByCategory: [...topicsByCategory, createTopic]
+                    },
+                    variables: {
+                        category: createTopic.forumCategory.slug
+                    }
+                });
+            } catch (e) {} //에러 발생 시 콘솔에 아무것도 안뜨면, debugger 실행하고 콘솔에 e라고 쳐보기
+        }
+    });
+
+export const useGetPostsByTopic = options => useQuery(POSTS_BY_TOPIC, options);
+export const useCreatePost = () => useMutation(CREATE_POST);
 
 //Forum Actions End ----------
 

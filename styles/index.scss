@@ -51,6 +51,10 @@ h1 {
     font-size: 23px;
 }
 
+p {
+    font-size: 15px;
+}
+
 // Modifiers START
 .white {
     color: $white;
@@ -395,8 +399,8 @@ h1 {
 
         &-avatar {
             .avatar {
-                width: 46px;
-                height: 46px;
+                width: 25px;
+                height: 25px;
                 margin: 2px calc(2px + 0.55em) 2px 2px;
                 // border-radius: 50%;
                 border: 1px solid $gray-40;
@@ -421,8 +425,8 @@ h1 {
                 justify-content: center;
 
                 .avatar {
-                    width: 76px;
-                    height: 76px;
+                    width: 55px;
+                    height: 55px;
                     margin: 2px calc(2px + 0.55em) 2px 2px;
                     // border-radius: 50%;
                     border: 1px solid $gray-40;

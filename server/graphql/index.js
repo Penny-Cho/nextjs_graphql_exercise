@@ -16,6 +16,7 @@ const Portfolio = require("./models/Portfolio");
 const User = require("./models/User");
 const ForumCategory = require("./models/ForumCategory");
 const Topic = require("./models/Topic");
+const Post = require("./models/Post");
 
 exports.createApolloServer = () => {
     // Construct a schema using Graphql schema language
@@ -35,6 +36,9 @@ exports.createApolloServer = () => {
             forumCategories: [ForumCategory]
 
             topicsByCategory(category: String): [Topic]
+            topicBySlug(slug: String): Topic
+
+            postsByTopic(slug: String): [Post]
         }
 
         type Mutation {
@@ -43,6 +47,8 @@ exports.createApolloServer = () => {
             deletePortfolio(id: ID): ID
 
             createTopic(input: TopicInput): Topic
+
+            createPost(input: PostInput): Post
 
             signUp(input: SignUpInput): String
             signIn(input: SignInInput): User
@@ -76,7 +82,8 @@ exports.createApolloServer = () => {
                 ForumCategory: new ForumCategory(
                     mongoose.model("ForumCategory")
                 ),
-                Topic: new Topic(mongoose.model("Topic"), req.user)
+                Topic: new Topic(mongoose.model("Topic"), req.user),
+                Post: new Post(mongoose.model("Post"), req.user)
             }
         })
     });

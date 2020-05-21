@@ -192,22 +192,96 @@ export const FORUM_CATEGORIES = gql`
     }
 `;
 
+const topicResponse = `
+    _id
+    slug
+    title
+    content
+    user {
+        username
+        avatar
+    }
+    forumCategory {
+        _id
+        title
+        slug
+    }
+
+`;
+
 export const TOPICS_BY_CATEGORY = gql`
     query TopicsByCategory($category: String) {
         topicsByCategory(category: $category) {
-            _id
-            slug
-            title
-            content
-            user {
-                username
-                avatar
+            ${topicResponse}
+        }
+    }
+`;
+
+export const CREATE_TOPIC = gql`
+    mutation CreateTopic(
+        $title: String
+        $content: String
+        $forumCategory: String
+    ) {
+        createTopic(
+            input: {
+                title: $title
+                content: $content
+                forumCategory: $forumCategory
             }
-            forumCategory {
-                _id
-                title
-                slug
-            }
+        ) {
+            ${topicResponse}
+        }
+    }
+`;
+
+export const TOPIC_BY_SLUG = gql`
+    query TopicBySlug($slug: String) {
+    topicBySlug(slug: $slug) {
+        ${topicResponse}
+
+        }
+    }
+`;
+
+const postResponse = `
+    _id
+    content
+    slug
+    createdAt
+    user {
+        username
+        avatar
+    }
+    parent {
+        content
+        user{
+            username
+            avatar
+        }
+    }
+`;
+
+export const POSTS_BY_TOPIC = gql`
+    query PostsByTopic($slug: String) {
+        postsByTopic(slug: $slug) {
+            ${postResponse}
+        }
+    }
+`;
+
+export const CREATE_POST = gql`
+    mutation CreatePost(
+        $content: String
+        $topic: String
+        $parent: String
+    ) {
+        createPost(input: {
+            content: $content
+            topic: $topic
+            parent: $parent
+        }) {
+            ${postResponse}
         }
     }
 `;
