@@ -98,7 +98,17 @@ export const useCreateTopic = () =>
     });
 
 export const useGetPostsByTopic = options => useQuery(POSTS_BY_TOPIC, options);
-export const useCreatePost = () => useMutation(CREATE_POST);
+export const useCreatePost = () =>
+    useMutation(CREATE_POST, {
+        // 미리 캐시화된 데이터들 때문에 새로 댓글을 달았을 때 순서가 엉키는 현상이 발생하여, 캐시를 지우는 작업을 아래와 같이 실행
+        update(cache) {
+            try {
+                Object.keys(cache.data.data).forEach(key => {
+                    key.match(/^Post/) && cache.data.delete(key);
+                });
+            } catch (e) {}
+        }
+    });
 
 //Forum Actions End ----------
 
