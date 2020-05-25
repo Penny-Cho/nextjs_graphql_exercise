@@ -1,8 +1,6 @@
-class User {
-    constructor(model) {
-        this.Model = model;
-    }
+const BaseModel = require("./BaseModel");
 
+class User extends BaseModel {
     getAuthUser(ctx) {
         if (ctx.isAuthenticated()) {
             return ctx.getUser();

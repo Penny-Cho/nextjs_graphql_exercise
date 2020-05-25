@@ -1,12 +1,8 @@
 const uniqueSlug = require("unique-slug");
 const moment = require("moment");
+const BaseModel = require("./BaseModel");
 
-class Post {
-    constructor(model, user) {
-        this.Model = model;
-        this.user = user;
-    }
-
+class Post extends BaseModel {
     //pageSize: 한 페이지에 몇 개의 아이템 넣는지 정함
     async getAllByTopic({ topic, pageNum = 1, pageSize = 5 }) {
         const skips = pageSize * (pageNum - 1);

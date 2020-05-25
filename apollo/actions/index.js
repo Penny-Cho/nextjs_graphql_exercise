@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useLazyQuery } from "@apollo/react-hooks";
 import {
+    GET_HIGHLIGHT,
     GET_PORTFOLIOS,
     UPDATE_PORTFOLIO,
     DELETE_PORTFOLIO,
@@ -16,6 +17,8 @@ import {
     POSTS_BY_TOPIC,
     CREATE_POST
 } from "../queries";
+
+export const useGetHighlight = options => useQuery(GET_HIGHLIGHT, options);
 
 export const useGetPortfolios = () => useQuery(GET_PORTFOLIOS);
 export const useGetPortfolio = options => useQuery(GET_PORTFOLIO, options);
